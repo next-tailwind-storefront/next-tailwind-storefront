@@ -1,0 +1,12 @@
+schema:
+  ${NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_URI}:
+    headers:
+      'X-Shopify-Storefront-Access-Token': ${NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN}
+
+documents:
+  - './graphql/*.ts'
+
+generates:
+  ./types/graphql.ts:
+    - typescript
+    - typescript-operations
