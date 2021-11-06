@@ -3256,52 +3256,12 @@ export type Image = {
    *
    * If there are any existing transformations in the original source URL, they will remain and not be stripped.
    *
+   * @deprecated Use `url` instead
    */
   originalSrc: Scalars['URL'];
   /**
    * The location of the image as a URL.
-   * @deprecated Previously an image had a single `src` field. This could either return the original image
-   * location or a URL that contained transformations such as sizing or scale.
-   *
-   * These transformations were specified by arguments on the parent field.
-   *
-   * Now an image has two distinct URL fields: `originalSrc` and `transformedSrc`.
-   *
-   * * `originalSrc` - the original unmodified image URL
-   * * `transformedSrc` - the image URL with the specified transformations included
-   *
-   * To migrate to the new fields, image transformations should be moved from the parent field to `transformedSrc`.
-   *
-   * Before:
-   * ```graphql
-   * {
-   *   shop {
-   *     productImages(maxWidth: 200, scale: 2) {
-   *       edges {
-   *         node {
-   *           src
-   *         }
-   *       }
-   *     }
-   *   }
-   * }
-   * ```
-   *
-   * After:
-   * ```graphql
-   * {
-   *   shop {
-   *     productImages {
-   *       edges {
-   *         node {
-   *           transformedSrc(maxWidth: 200, scale: 2)
-   *         }
-   *       }
-   *     }
-   *   }
-   * }
-   * ```
-   *
+   * @deprecated Use `url` instead
    */
   src: Scalars['URL'];
   /**
@@ -3310,6 +3270,7 @@ export type Image = {
    * All transformation arguments are considered "best-effort". If they can be applied to an image, they will be.
    * Otherwise any transformations which an image type does not support will be ignored.
    *
+   * @deprecated Use `url(transform:)` instead
    */
   transformedSrc: Scalars['URL'];
   /** The original width of the image in pixels. Returns `null` if the image is not hosted by Shopify. */
@@ -4740,12 +4701,16 @@ export type PageEdge = {
   node: Page;
 };
 
-/** Information about pagination in a connection. */
+/**
+ * Returns information about pagination in a connection, in accordance with the
+ * [Relay specification](https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo).
+ *
+ */
 export type PageInfo = {
   __typename?: 'PageInfo';
-  /** Indicates if there are more pages to fetch. */
+  /** Whether there are more pages to fetch following the current page. */
   hasNextPage: Scalars['Boolean'];
-  /** Indicates if there are any pages prior to the current page. */
+  /** Whether there are any pages prior to the current page. */
   hasPreviousPage: Scalars['Boolean'];
 };
 
@@ -6166,7 +6131,7 @@ export type StoreAvailabilityEdge = {
 };
 
 /**
- * An auto-generated type for paginating through multiple Strings.
+ * An auto-generated type for paginating through a list of Strings.
  *
  */
 export type StringConnection = {
@@ -6423,16 +6388,44 @@ export enum WeightUnit {
   Pounds = 'POUNDS'
 }
 
-export type ImageFragment = { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any };
+export type ImageFragment = { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any };
 
-export type ProductVariantFragment = { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } };
+export type ProductVariantFragment = { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } };
 
-export type ProductFragment = { __typename?: 'Product', id: string, title: string, vendor: string, handle: string, tags: Array<string>, descriptionHtml: any, productType: string, images: { __typename?: 'ImageConnection', edges: Array<{ __typename?: 'ImageEdge', node: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any } }> }, variants: { __typename?: 'ProductVariantConnection', edges: Array<{ __typename?: 'ProductVariantEdge', node: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } }> } };
+export type ProductFragment = { __typename?: 'Product', id: string, title: string, vendor: string, handle: string, tags: Array<string>, descriptionHtml: any, productType: string, images: { __typename?: 'ImageConnection', edges: Array<{ __typename?: 'ImageEdge', node: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } }> }, variants: { __typename?: 'ProductVariantConnection', edges: Array<{ __typename?: 'ProductVariantEdge', node: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } }> } };
 
-export type ShopQueryVariables = Exact<{ [key: string]: never; }>;
+export type AutomaticDiscountApplicationFragment = { __typename?: 'AutomaticDiscountApplication', title: string };
+
+export type DiscountAllocationFragment = { __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } };
+
+export type CheckoutLineItemFragment = { __typename?: 'CheckoutLineItem', id: string, quantity: number, title: string, discountAllocations: Array<{ __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } }>, variant?: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } | null | undefined };
+
+export type MailingAddressFragment = { __typename?: 'MailingAddress', id: string, address1?: string | null | undefined, address2?: string | null | undefined, city?: string | null | undefined, country?: string | null | undefined, firstName?: string | null | undefined, lastName?: string | null | undefined, phone?: string | null | undefined, province?: string | null | undefined, zip?: string | null | undefined };
+
+export type CheckoutFragment = { __typename?: 'Checkout', id: string, email?: string | null | undefined, webUrl: any, order?: { __typename?: 'Order', id: string } | null | undefined, shippingAddress?: { __typename?: 'MailingAddress', id: string, address1?: string | null | undefined, address2?: string | null | undefined, city?: string | null | undefined, country?: string | null | undefined, firstName?: string | null | undefined, lastName?: string | null | undefined, phone?: string | null | undefined, province?: string | null | undefined, zip?: string | null | undefined } | null | undefined, subtotalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalTaxV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, lineItems: { __typename?: 'CheckoutLineItemConnection', edges: Array<{ __typename?: 'CheckoutLineItemEdge', node: { __typename?: 'CheckoutLineItem', id: string, quantity: number, title: string, discountAllocations: Array<{ __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } }>, variant?: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } | null | undefined } }> } };
+
+export type CheckoutCreateMutationVariables = Exact<{
+  lineItems?: Maybe<Array<CheckoutLineItemInput> | CheckoutLineItemInput>;
+}>;
 
 
-export type ShopQuery = { __typename?: 'QueryRoot', shop: { __typename?: 'Shop', name: string } };
+export type CheckoutCreateMutation = { __typename?: 'Mutation', checkoutCreate?: { __typename?: 'CheckoutCreatePayload', checkout?: { __typename?: 'Checkout', id: string, email?: string | null | undefined, webUrl: any, order?: { __typename?: 'Order', id: string } | null | undefined, shippingAddress?: { __typename?: 'MailingAddress', id: string, address1?: string | null | undefined, address2?: string | null | undefined, city?: string | null | undefined, country?: string | null | undefined, firstName?: string | null | undefined, lastName?: string | null | undefined, phone?: string | null | undefined, province?: string | null | undefined, zip?: string | null | undefined } | null | undefined, subtotalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalTaxV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, lineItems: { __typename?: 'CheckoutLineItemConnection', edges: Array<{ __typename?: 'CheckoutLineItemEdge', node: { __typename?: 'CheckoutLineItem', id: string, quantity: number, title: string, discountAllocations: Array<{ __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } }>, variant?: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } | null | undefined } }> } } | null | undefined } | null | undefined };
+
+export type CheckoutLineItemsAddMutationVariables = Exact<{
+  id: Scalars['ID'];
+  lineItems: Array<CheckoutLineItemInput> | CheckoutLineItemInput;
+}>;
+
+
+export type CheckoutLineItemsAddMutation = { __typename?: 'Mutation', checkoutLineItemsAdd?: { __typename?: 'CheckoutLineItemsAddPayload', checkout?: { __typename?: 'Checkout', id: string, email?: string | null | undefined, webUrl: any, order?: { __typename?: 'Order', id: string } | null | undefined, shippingAddress?: { __typename?: 'MailingAddress', id: string, address1?: string | null | undefined, address2?: string | null | undefined, city?: string | null | undefined, country?: string | null | undefined, firstName?: string | null | undefined, lastName?: string | null | undefined, phone?: string | null | undefined, province?: string | null | undefined, zip?: string | null | undefined } | null | undefined, subtotalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalTaxV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, lineItems: { __typename?: 'CheckoutLineItemConnection', edges: Array<{ __typename?: 'CheckoutLineItemEdge', node: { __typename?: 'CheckoutLineItem', id: string, quantity: number, title: string, discountAllocations: Array<{ __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } }>, variant?: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } | null | undefined } }> } } | null | undefined } | null | undefined };
+
+export type CheckoutLineItemsUpdateMutationVariables = Exact<{
+  id: Scalars['ID'];
+  lineItems: Array<CheckoutLineItemUpdateInput> | CheckoutLineItemUpdateInput;
+}>;
+
+
+export type CheckoutLineItemsUpdateMutation = { __typename?: 'Mutation', checkoutLineItemsUpdate?: { __typename?: 'CheckoutLineItemsUpdatePayload', checkout?: { __typename?: 'Checkout', id: string, email?: string | null | undefined, webUrl: any, order?: { __typename?: 'Order', id: string } | null | undefined, shippingAddress?: { __typename?: 'MailingAddress', id: string, address1?: string | null | undefined, address2?: string | null | undefined, city?: string | null | undefined, country?: string | null | undefined, firstName?: string | null | undefined, lastName?: string | null | undefined, phone?: string | null | undefined, province?: string | null | undefined, zip?: string | null | undefined } | null | undefined, subtotalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalTaxV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, lineItems: { __typename?: 'CheckoutLineItemConnection', edges: Array<{ __typename?: 'CheckoutLineItemEdge', node: { __typename?: 'CheckoutLineItem', id: string, quantity: number, title: string, discountAllocations: Array<{ __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } }>, variant?: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } | null | undefined } }> } } | null | undefined } | null | undefined };
 
 export type ProductsQueryVariables = Exact<{
   query?: Maybe<Scalars['String']>;
@@ -6445,4 +6438,18 @@ export type ProductsQueryVariables = Exact<{
 }>;
 
 
-export type ProductsQuery = { __typename?: 'QueryRoot', products: { __typename?: 'ProductConnection', edges: Array<{ __typename?: 'ProductEdge', cursor: string, node: { __typename?: 'Product', id: string, title: string, vendor: string, handle: string, tags: Array<string>, descriptionHtml: any, productType: string, images: { __typename?: 'ImageConnection', edges: Array<{ __typename?: 'ImageEdge', node: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any } }> }, variants: { __typename?: 'ProductVariantConnection', edges: Array<{ __typename?: 'ProductVariantEdge', node: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } }> } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ProductsQuery = { __typename?: 'QueryRoot', products: { __typename?: 'ProductConnection', edges: Array<{ __typename?: 'ProductEdge', cursor: string, node: { __typename?: 'Product', id: string, title: string, vendor: string, handle: string, tags: Array<string>, descriptionHtml: any, productType: string, images: { __typename?: 'ImageConnection', edges: Array<{ __typename?: 'ImageEdge', node: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } }> }, variants: { __typename?: 'ProductVariantConnection', edges: Array<{ __typename?: 'ProductVariantEdge', node: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } }> } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ProductQueryVariables = Exact<{
+  handle: Scalars['String'];
+}>;
+
+
+export type ProductQuery = { __typename?: 'QueryRoot', product?: { __typename?: 'Product', id: string, title: string, vendor: string, handle: string, tags: Array<string>, descriptionHtml: any, productType: string, images: { __typename?: 'ImageConnection', edges: Array<{ __typename?: 'ImageEdge', node: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } }> }, variants: { __typename?: 'ProductVariantConnection', edges: Array<{ __typename?: 'ProductVariantEdge', node: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } }> } } | null | undefined };
+
+export type CheckoutQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type CheckoutQuery = { __typename?: 'QueryRoot', node?: { __typename?: 'AppliedGiftCard' } | { __typename?: 'Article' } | { __typename?: 'Blog' } | { __typename?: 'Cart' } | { __typename?: 'CartLine' } | { __typename?: 'Checkout', id: string, email?: string | null | undefined, webUrl: any, order?: { __typename?: 'Order', id: string } | null | undefined, shippingAddress?: { __typename?: 'MailingAddress', id: string, address1?: string | null | undefined, address2?: string | null | undefined, city?: string | null | undefined, country?: string | null | undefined, firstName?: string | null | undefined, lastName?: string | null | undefined, phone?: string | null | undefined, province?: string | null | undefined, zip?: string | null | undefined } | null | undefined, subtotalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalTaxV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, totalPriceV2: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode }, lineItems: { __typename?: 'CheckoutLineItemConnection', edges: Array<{ __typename?: 'CheckoutLineItemEdge', node: { __typename?: 'CheckoutLineItem', id: string, quantity: number, title: string, discountAllocations: Array<{ __typename?: 'DiscountAllocation', discountApplication: { __typename?: 'AutomaticDiscountApplication', title: string } | { __typename?: 'DiscountCodeApplication' } | { __typename?: 'ManualDiscountApplication' } | { __typename?: 'ScriptDiscountApplication' }, allocatedAmount: { __typename?: 'MoneyV2', amount: any, currencyCode: CurrencyCode } }>, variant?: { __typename?: 'ProductVariant', id: string, title: string, availableForSale: boolean, selectedOptions: Array<{ __typename?: 'SelectedOption', name: string, value: string }>, priceV2: { __typename?: 'MoneyV2', currencyCode: CurrencyCode, amount: any }, image?: { __typename?: 'Image', id?: string | null | undefined, width?: number | null | undefined, height?: number | null | undefined, altText?: string | null | undefined, originalSrc: any, thumbnailSrc: any, mediumSrc: any, largeSrc: any } | null | undefined, product: { __typename?: 'Product', id: string, handle: string, title: string } } | null | undefined } }> } } | { __typename?: 'CheckoutLineItem' } | { __typename?: 'Collection' } | { __typename?: 'Comment' } | { __typename?: 'ExternalVideo' } | { __typename?: 'Location' } | { __typename?: 'MailingAddress' } | { __typename?: 'MediaImage' } | { __typename?: 'Metafield' } | { __typename?: 'Model3d' } | { __typename?: 'Order' } | { __typename?: 'Page' } | { __typename?: 'Payment' } | { __typename?: 'Product' } | { __typename?: 'ProductOption' } | { __typename?: 'ProductVariant' } | { __typename?: 'ShopPolicy' } | { __typename?: 'Video' } | null | undefined };

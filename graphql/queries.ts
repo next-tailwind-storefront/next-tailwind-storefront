@@ -1,13 +1,5 @@
-import { gql } from "@apollo/client";
-import { PRODUCT_FRAGMENT } from "./fragments";
-
-export const SHOP = gql`
-  query shop {
-    shop {
-      name
-    }
-  }
-`;
+import { gql } from '@apollo/client'
+import { CHECKOUT_FRAGMENT, PRODUCT_FRAGMENT } from './fragments'
 
 export const PRODUCTS = gql`
   query products(
@@ -41,4 +33,22 @@ export const PRODUCTS = gql`
     }
   }
   ${PRODUCT_FRAGMENT}
-`;
+`
+
+export const PRODUCT = gql`
+  query product($handle: String!) {
+    product: productByHandle(handle: $handle) {
+      ...Product
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+`
+
+export const CHECKOUT = gql`
+  query checkout($id: ID!) {
+    node(id: $id) {
+      ...Checkout
+    }
+  }
+  ${CHECKOUT_FRAGMENT}
+`
