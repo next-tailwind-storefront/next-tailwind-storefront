@@ -1,83 +1,45 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
-import { first, last } from "lodash";
-import { QueryResult, useQuery } from "@apollo/client";
-import DevelopmentContext from "contexts/development";
-import { PRODUCTS } from "graphql/queries";
-import { useRouter } from "next/router";
-import {
-  ProductFragment,
-  ProductsQuery,
-  ProductsQueryVariables,
-} from "types/graphql";
+import { createContext, ReactNode, useContext, useMemo } from 'react'
+import { last } from 'lodash'
+import { useQuery } from '@apollo/client'
+import { Expand, LoaderContextProps, ProductFragment, ProductsQuery } from 'types'
+import { PRODUCTS } from 'graphql/queries'
+import { DevelopmentContext } from './development'
 
-export interface ProductsContextProps
-  extends QueryResult<ProductsQuery, ProductsQueryVariables> {
-  nodes: ProductFragment[];
-  variables: ProductsQueryVariables;
-  setVariables: Dispatch<SetStateAction<ProductsQueryVariables>>;
-}
+const BATCH_SIZE = 8
 
-const ProductsContext = createContext({} as ProductsContextProps);
+export const ProductsContext = createContext({} as Expand<LoaderContextProps<ProductFragment>>)
 
-export function ProductsProvider({ children }: { children: ReactNode }) {
-  const { query } = useRouter();
-  const productId = useMemo(() => first(query?.productId), [query]);
-  const [variables, setVariables] = useState<ProductsQueryVariables>({
-    query: productId ?? "",
-    first: 8,
-  });
-  const { loading, data, fetchMore, ...productsQuery } =
-    useQuery<ProductsQuery>(PRODUCTS, {
-      notifyOnNetworkStatusChange: true,
-      variables,
-      onCompleted() {
-        if (data?.products.pageInfo.hasNextPage) {
-          fetchMore({
-            variables: {
-              after: last(data.products.edges)?.cursor,
-            },
-          });
-        }
-      },
-    });
-  const { loading: developmentLoading } = useContext(DevelopmentContext);
+export function ProductsProvider({ children }: { children?: ReactNode }) {
+  const {
+    loading: dataLoading,
+    data,
+    fetchMore,
+  } = useQuery<ProductsQuery>(PRODUCTS, {
+    notifyOnNetworkStatusChange: true,
+    variables: { first: BATCH_SIZE },
+    onCompleted() {
+      if (data?.products.pageInfo.hasNextPage) {
+        fetchMore({
+          variables: {
+            after: last(data.products.edges)?.cursor,
+          },
+        })
+      }
+    },
+  })
+  const { forcedLoading } = useContext(DevelopmentContext)
+  const loading = useMemo(() => dataLoading || forcedLoading, [dataLoading, forcedLoading])
   const nodes = useMemo(
-    () => data?.products.edges.map(({ node }) => node) ?? [],
-    [data]
-  );
+    () => (!forcedLoading ? data?.products.edges.map(({ node }) => node) ?? [] : []),
+    [forcedLoading, data],
+  )
   const contextValue = useMemo(
     () => ({
-      ...productsQuery,
-      loading: loading || developmentLoading,
-      nodes,
-      data,
-      fetchMore,
-      variables,
-      setVariables,
-    }),
-    [
-      productsQuery,
+      size: BATCH_SIZE,
       loading,
-      developmentLoading,
       nodes,
-      data,
-      fetchMore,
-      variables,
-    ]
-  );
-  return (
-    <ProductsContext.Provider value={contextValue}>
-      {children}
-    </ProductsContext.Provider>
-  );
+    }),
+    [loading, nodes],
+  )
+  return <ProductsContext.Provider value={contextValue}>{children}</ProductsContext.Provider>
 }
-
-export default ProductsContext;

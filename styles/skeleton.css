@@ -1,0 +1,33 @@
+.skeleton {
+  @apply animate-pulse;
+}
+
+.skeleton .skeleton-figures {
+  @apply text-gray-300;
+}
+
+.skeleton .skeleton-blocks {
+  @apply rounded;
+  @apply select-none;
+  @apply pointer-events-none;
+  @apply bg-gray-300;
+  @apply text-gray-300;
+}
+
+.skeleton .skeleton-texts {
+  @apply inline-block;
+  @apply rounded;
+  @apply select-none;
+  @apply pointer-events-none;
+  @apply bg-gray-300;
+  @apply text-gray-300;
+}
+
+.skeleton .skeleton-multiline-texts {
+  @apply inline;
+  @apply rounded;
+  @apply select-none;
+  @apply pointer-events-none;
+  @apply bg-gray-300;
+  @apply text-gray-300;
+}

@@ -1,35 +1,21 @@
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useMemo, useState } from 'react'
+import { Expand } from 'types'
 
-interface DevelopmentContextValue {
-  loading: boolean;
-  toggleLoading: () => void;
+interface DevelopmentContextProps {
+  forcedLoading: boolean
+  setForcedLoading: Dispatch<SetStateAction<boolean>>
 }
 
-const DevelopmentContext = createContext({} as DevelopmentContextValue);
+export const DevelopmentContext = createContext({} as Expand<DevelopmentContextProps>)
 
-export function DevelopmentProvider({ children }: { children: ReactNode }) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const toggleLoading = useCallback(() => {
-    setLoading(!loading);
-  }, [loading, setLoading]);
+export function DevelopmentProvider({ children }: { children?: ReactNode }) {
+  const [forcedLoading, setForcedLoading] = useState(false)
   const contextValue = useMemo(
     () => ({
-      loading,
-      toggleLoading,
+      forcedLoading,
+      setForcedLoading,
     }),
-    [loading, toggleLoading]
-  );
-  return (
-    <DevelopmentContext.Provider value={contextValue}>
-      {children}
-    </DevelopmentContext.Provider>
-  );
+    [forcedLoading, setForcedLoading],
+  )
+  return <DevelopmentContext.Provider value={contextValue}>{children}</DevelopmentContext.Provider>
 }
-
-export default DevelopmentContext;

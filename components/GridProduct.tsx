@@ -1,39 +1,30 @@
-import Link from "next/link";
-import { ProductFragment } from "types/graphql";
-import { FadeInImage } from "components";
+import React from 'react'
+import Link from 'next/link'
+import { ProductFragment } from 'types/graphql'
+import { ProductImage, Skeleton, TaggedProductTitle } from 'components'
 
-export default function GridProduct({ node }: { node?: ProductFragment }) {
-  return node ? (
-    <div className="lg:w-1/4 md:w-1/2 p-4 w-full">
-      <Link
-        href={{
-          pathname: "/product/[productId]",
-          query: { productId: node.id },
-        }}
-      >
-        <div className="block relative h-48 rounded overflow-hidden">
-          <FadeInImage
-            className="object-cover object-center w-full h-full block"
-            alt={node.images.edges?.[0]?.node.altText ?? ""}
-            src={node.images.edges?.[0]?.node.thumbnailSrc}
-            layout="fill"
-          />
+export default function GridProduct({ loading, node }: { loading?: boolean; node?: ProductFragment }) {
+  return (
+    <Skeleton active={loading}>
+      <div className='w-full p-4 lg:w-1/4 md:w-1/2'>
+        <Link
+          passHref
+          href={{
+            pathname: node ? '/product/[handle]' : '',
+            query: { handle: node?.handle ?? '' },
+          }}
+        >
+          <div className='relative block h-48 overflow-hidden rounded cursor-pointer skeleton-blocks'>
+            <ProductImage
+              alt={node?.images.edges?.[0]?.node.altText}
+              src={node?.images.edges?.[0]?.node.thumbnailSrc}
+            />
+          </div>
+        </Link>
+        <div className='mt-4'>
+          <TaggedProductTitle node={node} variant='small' isLinked hasPrice />
         </div>
-      </Link>
-      <div className="mt-4">
-        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
-          {node.vendor}
-        </h3>
-        <h2 className="text-gray-900 title-font text-lg font-medium">
-          {node.title}
-        </h2>
-        <p className="mt-1">
-          {new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: node.variants.edges?.[0]?.node?.priceV2.currencyCode,
-          }).format(node.variants.edges?.[0]?.node?.priceV2.amount)}
-        </p>
       </div>
-    </div>
-  ) : null;
+    </Skeleton>
+  )
 }

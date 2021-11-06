@@ -1,28 +1,18 @@
-import ProductsContext, { ProductsProvider } from "contexts/products";
-import Head from "next/head";
-import {
-  Grid,
-  GridProduct,
-  GridSkeletonProduct,
-  Layout,
-  SkeletonController,
-} from "components";
+import { useContext } from 'react'
+import Head from 'next/head'
+import { ProductsContext } from 'contexts'
+import { Grid, GridProduct, Layout } from 'components'
 
 export default function Index() {
+  const productsContext = useContext(ProductsContext)
   return (
     <Layout>
       <Head>
         <title>Home - Headless Ecommerce</title>
       </Head>
-      <ProductsProvider>
-        <SkeletonController
-          Item={<GridProduct />}
-          Skeleton={<GridSkeletonProduct />}
-          context={ProductsContext}
-        >
-          <Grid />
-        </SkeletonController>
-      </ProductsProvider>
+      <Grid {...productsContext}>
+        <GridProduct />
+      </Grid>
     </Layout>
-  );
+  )
 }
